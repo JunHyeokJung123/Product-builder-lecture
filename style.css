@@ -1,1 +1,17 @@
-/* Add styles here */
+body {
+  background-color: #121212;
+  color: #fff;
+  font-family: sans-serif;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+  margin: 0;
+  overflow: hidden; /* Prevent scrollbars during animations */
+}
+
+lotto-machine {
+  display: block;
+  width: 100%;
+  max-width: 500px;
+}
