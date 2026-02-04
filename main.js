@@ -36,10 +36,9 @@ class LottoMachine extends HTMLElement {
           display: flex;
           align-items: center;
           justify-content: center;
-          height: 100vh;
+          height: 100%;
           padding: 20px;
           box-sizing: border-box;
-          position: relative;
           background-color: var(--background-color);
           transition: background-color 0.3s;
         }
@@ -54,13 +53,22 @@ class LottoMachine extends HTMLElement {
           --history-item-bg-color: #e9e9e9;
         }
         
+        .lotto-container {
+          display: flex;
+          flex-direction: column;
+          align-items: center;
+          gap: 20px;
+          width: 100%;
+        }
+
         .main-content {
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-            gap: 40px;
-            width: 100%;
+          display: flex;
+          flex-direction: row;
+          align-items: flex-start;
+          justify-content: center;
+          gap: 40px;
+          width: 100%;
+          max-width: 1200px;
         }
 
         .ball {
@@ -119,6 +127,7 @@ class LottoMachine extends HTMLElement {
           transition: all 0.4s ease-in-out;
           visibility: hidden;
           max-height: 0;
+          order: 2;
         }
 
         .results-panel.active {
@@ -137,18 +146,14 @@ class LottoMachine extends HTMLElement {
         }
         
         .history-panel {
-          position: absolute;
-          top: 80px; /* Adjusted to be below theme toggle */
-          right: 20px;
           background-color: var(--panel-bg-color);
           color: var(--text-color);
           border-radius: 10px;
           padding: 15px;
           box-shadow: 0 5px 15px var(--panel-shadow-color);
-          width: 280px;
-          max-height: calc(100vh - 100px);
-          overflow-y: auto;
+          width: 320px;
           transition: all 0.3s;
+          order: 1;
         }
         
         .history-title { margin: 0 0 10px 0; font-size: 1.2em; color: var(--button-bg-color); text-align: center; }
@@ -198,19 +203,35 @@ class LottoMachine extends HTMLElement {
           from { transform: scale(0); }
           to { transform: scale(1); }
         }
+
+        @media (max-width: 900px) {
+          .main-content {
+            flex-direction: column;
+            align-items: center;
+          }
+          .history-panel {
+            width: 100%;
+            max-width: 550px;
+            order: 1;
+          }
+          .results-panel {
+            order: 2;
+          }
+        }
       </style>
       
-      <main class="main-content">
-          <div class="results-panel">
-             <h3 class="results-title">Winning Numbers</h3>
-             <div class="result-balls"></div>
-          </div>
-          <button>Press for Fortune</button>
-      </main>
-      
-      <div class="history-panel">
-        <h4 class="history-title">Recent Draws</h4>
-        <ul class="history-list"></ul>
+      <div class="lotto-container">
+        <button>Press for Fortune</button>
+        <div class="main-content">
+            <div class="results-panel">
+               <h3 class="results-title">Winning Numbers</h3>
+               <div class="result-balls"></div>
+            </div>
+            <div class="history-panel">
+              <h4 class="history-title">Recent Draws</h4>
+              <ul class="history-list"></ul>
+            </div>
+        </div>
       </div>
       <button class="theme-toggle-button">☀️</button>
     `;
@@ -321,3 +342,143 @@ class LottoMachine extends HTMLElement {
 }
 
 customElements.define('lotto-machine', LottoMachine);
+
+class PartnershipForm extends HTMLElement {
+  constructor() {
+    super();
+    this.attachShadow({ mode: 'open' });
+  }
+
+  connectedCallback() {
+    this.render();
+  }
+
+  render() {
+    this.shadowRoot.innerHTML = `
+      <style>
+        :host {
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          height: 100%;
+          padding: 20px;
+          box-sizing: border-box;
+          --background-color: #1a1a1a;
+          --text-color: #e0e0e0;
+          --panel-bg-color: #2a2a2a;
+          --panel-shadow-color: rgba(0,0,0,0.5);
+          --button-bg-color: #4CAF50;
+          --button-text-color: white;
+        }
+
+        :host(.light-mode) {
+          --background-color: #f0f0f0;
+          --text-color: #333;
+          --panel-bg-color: #fff;
+          --panel-shadow-color: rgba(0,0,0,0.15);
+          --button-bg-color: #5cb85c;
+        }
+        
+        form {
+          background-color: var(--panel-bg-color);
+          color: var(--text-color);
+          padding: 25px;
+          border-radius: 15px;
+          box-shadow: 0 10px 20px var(--panel-shadow-color);
+          width: 100%;
+          max-width: 550px;
+          text-align: center;
+        }
+
+        h2 {
+          margin: 0 0 20px 0;
+          font-size: 2em;
+          color: var(--button-bg-color);
+        }
+
+        .form-group {
+          margin-bottom: 20px;
+          text-align: left;
+        }
+
+        label {
+          display: block;
+          margin-bottom: 5px;
+          font-weight: bold;
+        }
+
+        input, textarea {
+          width: 100%;
+          padding: 10px;
+          border-radius: 5px;
+          border: 1px solid #555;
+          background-color: #333;
+          color: #fff;
+          box-sizing: border-box;
+        }
+
+        button {
+          background-color: var(--button-bg-color);
+          border: none;
+          color: var(--button-text-color);
+          padding: 15px 30px;
+          text-align: center;
+          font-size: 1.2em;
+          cursor: pointer;
+          border-radius: 8px;
+          transition: background-color 0.3s;
+        }
+
+        button:hover {
+          filter: brightness(1.1);
+        }
+      </style>
+      <form>
+        <h2>Partnership Inquiry</h2>
+        <div class="form-group">
+          <label for="name">Name</label>
+          <input type="text" id="name" name="name" required>
+        </div>
+        <div class="form-group">
+          <label for="email">Email</label>
+          <input type="email" id="email" name="email" required>
+        </div>
+        <div class="form-group">
+          <label for="message">Message</label>
+          <textarea id="message" name="message" rows="5" required></textarea>
+        </div>
+        <button type="submit">Submit</button>
+      </form>
+    `;
+  }
+}
+
+customElements.define('partnership-form', PartnershipForm);
+
+function handleNavigation() {
+  const pages = document.querySelectorAll('.page');
+  const links = document.querySelectorAll('nav a');
+  const hash = window.location.hash || '#lotto';
+
+  pages.forEach(page => {
+    page.style.display = 'none';
+  });
+
+  links.forEach(link => {
+    link.classList.remove('active');
+  });
+
+  const activePage = document.querySelector(hash);
+  const activeLink = document.querySelector(`nav a[href="${hash}"]`);
+
+  if (activePage) {
+    activePage.style.display = 'flex';
+  }
+
+  if (activeLink) {
+    activeLink.classList.add('active');
+  }
+}
+
+window.addEventListener('hashchange', handleNavigation);
+window.addEventListener('DOMContentLoaded', handleNavigation);

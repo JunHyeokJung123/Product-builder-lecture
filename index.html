@@ -6,8 +6,18 @@
   <link rel="stylesheet" href="style.css">
 </head>
 <body>
-  <lotto-machine></lotto-machine>
-  <a href="contact.html" style="display: block; text-align: center; margin-top: 20px;">제휴 문의</a>
+  <nav>
+    <a href="#lotto" class="active">Lotto</a>
+    <a href="#partnership">Partnership</a>
+  </nav>
+  <div id="content">
+    <div id="lotto" class="page">
+      <lotto-machine></lotto-machine>
+    </div>
+    <div id="partnership" class="page" style="display: none;">
+      <partnership-form></partnership-form>
+    </div>
+  </div>
   <script src="main.js"></script>
 </body>
 </html>
