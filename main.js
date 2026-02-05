@@ -14,11 +14,13 @@ class LottoMachine extends HTMLElement {
   connectedCallback() {
     this.render();
     this.resultsPanel = this.shadowRoot.querySelector('.results-panel');
-    this.drawButton = this.shadowRoot.querySelector('button');
+    this.drawOneButton = this.shadowRoot.querySelector('#draw-one-button');
+    this.drawFiveButton = this.shadowRoot.querySelector('#draw-five-button');
     this.historyPanel = this.shadowRoot.querySelector('.history-panel');
     this.themeToggleButton = this.shadowRoot.querySelector('.theme-toggle-button');
     
-    this.drawButton.addEventListener('click', () => this.draw());
+    this.drawOneButton.addEventListener('click', () => this.draw(1));
+    this.drawFiveButton.addEventListener('click', () => this.draw(5));
     this.themeToggleButton.addEventListener('click', () => this.toggleTheme());
   }
 
@@ -62,6 +64,11 @@ class LottoMachine extends HTMLElement {
           width: 100%;
         }
 
+        .button-container {
+          display: flex;
+          gap: 20px;
+        }
+
         .main-content {
           display: flex;
           flex-direction: row;
@@ -101,9 +108,9 @@ class LottoMachine extends HTMLElement {
           background-color: var(--button-bg-color);
           border: none;
           color: var(--button-text-color);
-          padding: 20px 40px;
+          padding: 20px 30px;
           text-align: center;
-          font-size: 24px;
+          font-size: 20px;
           cursor: pointer;
           border-radius: 12px;
           transition: background-color 0.3s, transform 0.1s;
@@ -222,7 +229,10 @@ class LottoMachine extends HTMLElement {
       </style>
       
       <div class="lotto-container">
-        <button>Press for Fortune</button>
+        <div class="button-container">
+          <button id="draw-one-button">Press for 1 Fortune</button>
+          <button id="draw-five-button">Press for 5 Fortunes</button>
+        </div>
         <div class="main-content">
             <div class="results-panel">
                <h3 class="results-title">Winning Numbers</h3>
@@ -253,45 +263,48 @@ class LottoMachine extends HTMLElement {
       this.themeToggleButton.innerHTML = document.body.classList.contains('light-mode') ? '🌙' : '☀️';
   }
 
-  draw() {
-    this.drawButton.disabled = true;
+  draw(count = 1) {
+    this.drawOneButton.disabled = true;
+    this.drawFiveButton.disabled = true;
     
     if (this.resultsPanel.classList.contains('active')) {
       this.resultsPanel.classList.remove('active');
       setTimeout(() => {
-        this.displayResults();
-        this.drawButton.disabled = false;
+        this.displayResults(count);
+        this.drawOneButton.disabled = false;
+        this.drawFiveButton.disabled = false;
       }, 400);
     } else {
-      this.displayResults();
-      this.drawButton.disabled = false;
+      this.displayResults(count);
+      this.drawOneButton.disabled = false;
+      this.drawFiveButton.disabled = false;
     }
   }
 
-  displayResults() {
+  displayResults(count = 1) {
       const resultBallsContainer = this.shadowRoot.querySelector('.result-balls');
       const resultsTitle = this.shadowRoot.querySelector('.results-title');
       resultBallsContainer.innerHTML = '';
 
       resultsTitle.textContent = this.resultTitles[Math.floor(Math.random() * this.resultTitles.length)];
 
-      const whiteBalls = [];
-      while (whiteBalls.length < 5) {
-        const num = Math.floor(Math.random() * 69) + 1;
-        if (!whiteBalls.includes(num)) {
-          whiteBalls.push(num);
-        }
-      }
-      
-      // Sort the main numbers in ascending order
-      whiteBalls.sort((a, b) => a - b);
-      
-      const powerball = Math.floor(Math.random() * 26) + 1;
-      const finalBalls = [...whiteBalls, powerball];
-      
-      this.addToHistory(finalBalls);
+      let lastGeneratedSet = [];
 
-      finalBalls.forEach((number, index) => {
+      for (let i = 0; i < count; i++) {
+        const whiteBalls = [];
+        while (whiteBalls.length < 5) {
+          const num = Math.floor(Math.random() * 69) + 1;
+          if (!whiteBalls.includes(num)) {
+            whiteBalls.push(num);
+          }
+        }
+        whiteBalls.sort((a, b) => a - b);
+        const powerball = Math.floor(Math.random() * 26) + 1;
+        lastGeneratedSet = [...whiteBalls, powerball];
+        this.addToHistory(lastGeneratedSet);
+      }
+
+      lastGeneratedSet.forEach((number, index) => {
           const colorClass = index < 5 ? `color-${(number % 5) + 1}` : 'powerball';
           const ball = this.createResultBall(number, colorClass);
           ball.style.animationDelay = `${index * 0.1}s`;
