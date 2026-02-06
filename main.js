@@ -281,19 +281,13 @@ class LottoMachine extends HTMLElement {
   draw(count = 1) {
     this.drawOneButton.disabled = true;
     this.drawFiveButton.disabled = true;
-    
-    if (this.resultsPanel.classList.contains('active')) {
-      this.resultsPanel.classList.remove('active');
-      setTimeout(() => {
-        this.displayResults(count);
+
+    this.displayResults(count);
+
+    setTimeout(() => {
         this.drawOneButton.disabled = false;
         this.drawFiveButton.disabled = false;
-      }, 400);
-    } else {
-      this.displayResults(count);
-      this.drawOneButton.disabled = false;
-      this.drawFiveButton.disabled = false;
-    }
+    }, 500);
   }
 
   displayResults(count = 1) {
@@ -382,143 +376,3 @@ class LottoMachine extends HTMLElement {
 }
 
 customElements.define('lotto-machine', LottoMachine);
-
-class PartnershipForm extends HTMLElement {
-  constructor() {
-    super();
-    this.attachShadow({ mode: 'open' });
-  }
-
-  connectedCallback() {
-    this.render();
-  }
-
-  render() {
-    this.shadowRoot.innerHTML = `
-      <style>
-        :host {
-          display: flex;
-          align-items: center;
-          justify-content: center;
-          height: 100%;
-          padding: 20px;
-          box-sizing: border-box;
-          --background-color: #1a1a1a;
-          --text-color: #e0e0e0;
-          --panel-bg-color: #2a2a2a;
-          --panel-shadow-color: rgba(0,0,0,0.5);
-          --button-bg-color: #4CAF50;
-          --button-text-color: white;
-        }
-
-        :host(.light-mode) {
-          --background-color: #f0f0f0;
-          --text-color: #333;
-          --panel-bg-color: #fff;
-          --panel-shadow-color: rgba(0,0,0,0.15);
-          --button-bg-color: #5cb85c;
-        }
-        
-        form {
-          background-color: var(--panel-bg-color);
-          color: var(--text-color);
-          padding: 25px;
-          border-radius: 15px;
-          box-shadow: 0 10px 20px var(--panel-shadow-color);
-          width: 100%;
-          max-width: 550px;
-          text-align: center;
-        }
-
-        h2 {
-          margin: 0 0 20px 0;
-          font-size: 2em;
-          color: var(--button-bg-color);
-        }
-
-        .form-group {
-          margin-bottom: 20px;
-          text-align: left;
-        }
-
-        label {
-          display: block;
-          margin-bottom: 5px;
-          font-weight: bold;
-        }
-
-        input, textarea {
-          width: 100%;
-          padding: 10px;
-          border-radius: 5px;
-          border: 1px solid #555;
-          background-color: #333;
-          color: #fff;
-          box-sizing: border-box;
-        }
-
-        button {
-          background-color: var(--button-bg-color);
-          border: none;
-          color: var(--button-text-color);
-          padding: 15px 30px;
-          text-align: center;
-          font-size: 1.2em;
-          cursor: pointer;
-          border-radius: 8px;
-          transition: background-color 0.3s;
-        }
-
-        button:hover {
-          filter: brightness(1.1);
-        }
-      </style>
-      <form>
-        <h2>Partnership Inquiry</h2>
-        <div class="form-group">
-          <label for="name">Name</label>
-          <input type="text" id="name" name="name" required>
-        </div>
-        <div class="form-group">
-          <label for="email">Email</label>
-          <input type="email" id="email" name="email" required>
-        </div>
-        <div class="form-group">
-          <label for="message">Message</label>
-          <textarea id="message" name="message" rows="5" required></textarea>
-        </div>
-        <button type="submit">Submit</button>
-      </form>
-    `;
-  }
-}
-
-customElements.define('partnership-form', PartnershipForm);
-
-function handleNavigation() {
-  const pages = document.querySelectorAll('.page');
-  const links = document.querySelectorAll('nav a');
-  const hash = window.location.hash || '#lotto';
-
-  pages.forEach(page => {
-    page.style.display = 'none';
-  });
-
-  links.forEach(link => {
-    link.classList.remove('active');
-  });
-
-  const activePage = document.querySelector(hash);
-  const activeLink = document.querySelector(`nav a[href="${hash}"]`);
-
-  if (activePage) {
-    activePage.style.display = 'flex';
-  }
-
-  if (activeLink) {
-    activeLink.classList.add('active');
-  }
-}
-
-window.addEventListener('hashchange', handleNavigation);
-window.addEventListener('DOMContentLoaded', handleNavigation);
