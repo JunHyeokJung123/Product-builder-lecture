@@ -136,17 +136,32 @@ class LottoMachine extends HTMLElement {
           visibility: hidden;
           max-height: 0;
           order: 2;
+          display: flex; /* Added for vertical stacking of result sets */
+          flex-direction: column; /* Added for vertical stacking of result sets */
+          align-items: center; /* Center items horizontally */
+          gap: 20px; /* Space between result sets */
         }
 
         .results-panel.active {
           opacity: 1;
           transform: scale(1) translateY(0);
           visibility: visible;
-          max-height: 500px;
+          max-height: 500px; /* Increased max-height to accommodate multiple rows */
         }
 
         .results-title { margin: 0 0 20px 0; font-size: 2em; color: var(--button-bg-color); }
         .result-balls { display: flex; justify-content: center; gap: 15px; flex-wrap: wrap; }
+        
+        .result-set { /* New class for each set of results */
+            display: flex;
+            justify-content: center;
+            gap: 15px;
+            flex-wrap: wrap;
+            margin-bottom: 15px; /* Space between different sets */
+        }
+        .result-set:last-child {
+            margin-bottom: 0; /* No margin after the last set */
+        }
 
         .result-ball-animation {
           animation: growIn 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards;
@@ -284,13 +299,14 @@ class LottoMachine extends HTMLElement {
   displayResults(count = 1) {
       const resultBallsContainer = this.shadowRoot.querySelector('.result-balls');
       const resultsTitle = this.shadowRoot.querySelector('.results-title');
-      resultBallsContainer.innerHTML = '';
+      resultBallsContainer.innerHTML = ''; // Clear previous results
 
       resultsTitle.textContent = this.resultTitles[Math.floor(Math.random() * this.resultTitles.length)];
 
-      let lastGeneratedSet = [];
-
       for (let i = 0; i < count; i++) {
+        const resultSetDiv = document.createElement('div');
+        resultSetDiv.classList.add('result-set');
+
         const whiteBalls = [];
         while (whiteBalls.length < 5) {
           const num = Math.floor(Math.random() * 69) + 1;
@@ -300,16 +316,17 @@ class LottoMachine extends HTMLElement {
         }
         whiteBalls.sort((a, b) => a - b);
         const powerball = Math.floor(Math.random() * 26) + 1;
-        lastGeneratedSet = [...whiteBalls, powerball];
-        this.addToHistory(lastGeneratedSet);
+        const currentSet = [...whiteBalls, powerball];
+        
+        currentSet.forEach((number, index) => {
+            const colorClass = index < 5 ? `color-${(number % 5) + 1}` : 'powerball';
+            const ball = this.createResultBall(number, colorClass);
+            ball.style.animationDelay = `${i * 0.2 + index * 0.1}s`; // Stagger animation for each set and each ball
+            resultSetDiv.appendChild(ball);
+        });
+        resultBallsContainer.appendChild(resultSetDiv);
+        this.addToHistory(currentSet);
       }
-
-      lastGeneratedSet.forEach((number, index) => {
-          const colorClass = index < 5 ? `color-${(number % 5) + 1}` : 'powerball';
-          const ball = this.createResultBall(number, colorClass);
-          ball.style.animationDelay = `${index * 0.1}s`;
-          resultBallsContainer.appendChild(ball);
-      });
       
       this.resultsPanel.classList.add('active');
   }
