@@ -12,6 +12,7 @@ const lotteries = {
       <p>Players select five numbers from a set of 69 white balls and one number from a set of 26 red Powerballs. The odds of winning the jackpot are approximately 1 in 292.2 million.</p>
     `
   },
+  //fuck
   megamillions: {
     name: "Mega Millions",
     tagline: "Famous for its jaw-dropping jackpots! Drawings are held every Tuesday and Friday.",
