@@ -1,119 +1,66 @@
-body {
-  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
-  margin: 0;
-  padding: 0;
-  transition: background-color 0.3s, color 0.3s;
-}
-
-/* Light Mode (Default) */
-body {
-  background-color: #f4f7f9;
-  color: #2d3748;
-}
-
-.sidebar {
-  background-color: #ffffff;
-  border-right-color: #e2e8f0;
-}
-
-.sidebar-title, h1, #lotto-info h3 {
-  color: #2c5282;
-}
-
-.lottery-list-item:hover {
-  background-color: #edf2f7;
-}
-
-.lottery-list-item.active, .sidebar-title.active {
-  background-color: #2c5282;
-  color: #ffffff;
-}
-
-#lotto-info, .history-item {
-    background-color: #ffffff;
-    box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
-}
-
-/* Dark Mode */
-body.dark-mode {
-  background-color: #1a202c;
-  color: #e2e8f0;
-}
-
-body.dark-mode .sidebar {
-  background-color: #2d3748;
-  border-right-color: #4a5568;
-}
-
-body.dark-mode .sidebar-title, body.dark-mode h1, body.dark-mode #lotto-info h3 {
-  color: #63b3ed;
-}
-
-body.dark-mode .lottery-list-item {
-  color: #e2e8f0;
-}
-
-body.dark-mode .lottery-list-item:hover {
-  background-color: #4a5568;
-}
-
-body.dark-mode .lottery-list-item.active, body.dark-mode .sidebar-title.active {
-  background-color: #63b3ed;
-  color: #1a202c;
-}
-
-body.dark-mode #lotto-info, body.dark-mode .history-item {
-    background-color: #2d3748;
-    box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.3), 0 4px 6px -2px rgba(0, 0, 0, 0.15);
-}
-
-/* General Styles */
+/* General Body Styles */
+body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif; margin: 0; background-color: #f7fafc; color: #1a202c; transition: background-color 0.3s, color 0.3s; }
 .container { display: flex; height: 100vh; }
-.sidebar { width: 280px; padding: 25px; box-shadow: 2px 0 5px rgba(0,0,0,0.05); display: flex; flex-direction: column; justify-content: space-between; transition: background-color 0.3s, border-color 0.3s; }
-.sidebar-title { font-size: 1.8em; margin: 0 0 20px 0; cursor: pointer; padding: 10px; border-radius: 8px; transition: background-color 0.2s, color 0.2s; }
+
+/* Sidebar Styles */
+.sidebar { width: 250px; background-color: #ffffff; padding: 25px; display: flex; flex-direction: column; justify-content: space-between; border-right: 1px solid #e2e8f0; }
+.sidebar-title { font-size: 1.6em; color: #2c5282; margin: 0 0 20px 0; }
 .lottery-list { list-style: none; padding: 0; margin: 0; }
-.lottery-list-item { padding: 15px 20px; font-size: 1.1em; font-weight: 500; border-radius: 8px; cursor: pointer; transition: background-color 0.2s, color 0.2s; margin-bottom: 10px; }
-.main-content { flex-grow: 1; padding: 40px; overflow-y: auto; display: flex; flex-direction: column; align-items: center; width: 100%; }
-#lotto-display { width: 100%; max-width: 800px; text-align: center; margin-bottom: 40px; }
-h1 { font-size: 2.8em; margin-bottom: 10px; }
-p { font-size: 1.2em; max-width: 700px; line-height: 1.6; margin: 0 auto 30px auto; }
-#lotto-info { padding: 30px; border-radius: 12px; width: 100%; max-width: 800px; margin-top: 20px; transition: background-color 0.3s; }
-#lotto-info h3 { font-size: 1.5em; margin: 0 0 15px 0; border-bottom: 2px solid; padding-bottom: 10px; transition: color 0.3s; }
-#lotto-info p { font-size: 1em; line-height: 1.7; margin: 0 0 15px 0; }
+.lottery-list-item { padding: 12px 18px; margin-bottom: 8px; border-radius: 8px; cursor: pointer; font-weight: 500; transition: background-color 0.2s, color 0.2s; }
+.lottery-list-item:hover { background-color: #edf2f7; }
+.lottery-list-item.active { background-color: #3182ce; color: #ffffff; font-weight: bold; }
+#theme-toggle { background: none; border: none; font-size: 1.8em; cursor: pointer; align-self: center; margin-top: 20px; }
+
+/* Main Content Styles */
+.main-content { flex-grow: 1; padding: 30px 40px; overflow-y: auto; }
 
 /* Tabs */
-.tabs { display: flex; margin-bottom: 30px; border-radius: 8px; overflow: hidden; width: 100%; max-width: 800px;}
-.tab-link { flex: 1; padding: 15px; background-color: #e2e8f0; color: #4a5568; text-align: center; cursor: pointer; transition: background-color 0.3s, color 0.3s; border: none; font-size: 1.1em; font-weight: 500;}
-.tab-link.active { background-color: #2c5282; color: #ffffff; }
-.tab-content { display: none; width: 100%; max-width: 800px; }
+.tabs { display: flex; border-bottom: 2px solid #e2e8f0; margin-bottom: 25px; }
+.tab-link { font-size: 1.1em; padding: 12px 20px; cursor: pointer; background: none; border: none; border-bottom: 3px solid transparent; font-weight: 600; color: #4a5568; margin-bottom: -2px; }
+.tab-link.active { color: #3182ce; border-bottom-color: #3182ce; }
+.tab-content { display: none; animation: fadeIn 0.5s; }
 .tab-content.active { display: block; }
 
-body.dark-mode .tab-link { background-color: #2d3748; color: #a0aec0; }
-body.dark-mode .tab-link.active { background-color: #63b3ed; color: #1a202c; }
+/* Lotto Display Styles */
+#lotto-display { text-align: center; margin-bottom: 25px; }
+#lotto-name { font-size: 3em; margin: 0; color: #2c5282; font-weight: 700; }
+#lotto-tagline { font-size: 1.2em; max-width: 700px; line-height: 1.6; margin: 10px auto 30px auto; color: #4a5568; }
+#lotto-info { padding: 25px; border-radius: 12px; width: 100%; max-width: 800px; margin: 20px auto 0 auto; transition: background-color 0.3s; background-color: #ffffff; border: 1px solid #e2e8f0;}
+#lotto-info h3 { font-size: 1.5em; margin: 0 0 15px 0; border-bottom: 2px solid #e2e8f0; padding-bottom: 10px; color: #2d3748; }
+#lotto-info p { font-size: 1em; line-height: 1.7; margin: 0 0 15px 0; }
 
-#theme-toggle {
-    background-color: transparent;
-    border: 2px solid #2c5282;
-    color: #2c5282;
-    width: 50px;
-    height: 50px;
-    border-radius: 50%;
-    cursor: pointer;
-    font-size: 24px;
-    align-self: center;
-    transition: all 0.3s;
+/* Analysis and News */
+#analysis-news-content { display: grid; grid-template-columns: 1fr 1fr; gap: 40px; max-width: 1200px; margin: 0 auto; }
+#past-winning-analysis h2, #related-news-articles h2 { font-size: 1.6em; color: #2c5282; border-bottom: 2px solid #e2e8f0; padding-bottom: 10px; margin-bottom: 20px; }
+#analysis-content, #news-content { font-size: 1.1em; line-height: 1.6; }
+#news-content article { margin-bottom: 25px; }
+#news-content h4 { margin-bottom: 8px; font-size: 1.2em; }
+
+/* Dark Mode Styles */
+body.dark-mode { background-color: #1a202c; color: #e2e8f0; }
+body.dark-mode .sidebar { background-color: #2d3748; border-right-color: #4a5568; }
+body.dark-mode .sidebar-title { color: #63b3ed; }
+body.dark-mode .lottery-list-item:hover { background-color: #4a5568; }
+body.dark-mode .lottery-list-item.active { background-color: #4299e1; color: #1a202c; }
+body.dark-mode .tabs { border-bottom-color: #4a5568; }
+body.dark-mode .tab-link { color: #a0aec0; }
+body.dark-mode .tab-link.active { color: #63b3ed; border-bottom-color: #63b3ed; }
+body.dark-mode #lotto-name { color: #63b3ed; }
+body.dark-mode #lotto-tagline { color: #a0aec0; }
+body.dark-mode #lotto-info { background-color: #2d3748; border-color: #4a5568; }
+body.dark-mode #lotto-info h3, body.dark-mode #past-winning-analysis h2, body.dark-mode #related-news-articles h2 { color: #90cdf4; border-color: #4a5568; }
+
+/* Keyframes for Animation */
+@keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+
+/* Responsive Design */
+@media (max-width: 768px) {
+    .container { flex-direction: column; }
+    .sidebar { width: 100%; height: auto; border-right: none; border-bottom: 1px solid #e2e8f0; flex-direction: row; align-items: center; padding: 15px; }
+    .sidebar-title { display: none; }
+    .lottery-list { display: flex; gap: 10px; overflow-x: auto; padding-bottom: 10px; }
+    .lottery-list-item { white-space: nowrap; margin-bottom: 0; }
+    #theme-toggle { margin-left: auto; }
+    .main-content { padding: 20px; }
+    #analysis-news-content { grid-template-columns: 1fr; }
 }
-
-body.dark-mode #theme-toggle {
-    border-color: #63b3ed;
-    color: #63b3ed;
-}
-
-#theme-toggle:hover { transform: scale(1.1); }
-
-.ball-color-1 { background-color: #e53e3e; } /* Red */
-.ball-color-2 { background-color: #3182ce; } /* Blue */
-.ball-color-3 { background-color: #38a169; } /* Green */
-.ball-color-4 { background-color: #dd6b20; } /* Orange */
-.ball-color-5 { background-color: #805ad5; } /* Purple */
-.special-ball { background-color: #f6e05e; color: #2d3748 !important; border: 2px solid #d69e2e !important; }
