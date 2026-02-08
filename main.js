@@ -260,9 +260,15 @@ document.addEventListener('DOMContentLoaded', () => {
     const lottoTaglineEl = document.getElementById('lotto-tagline');
     const lottoInfoEl = document.getElementById('lotto-info');
     const themeToggle = document.getElementById('theme-toggle');
+    const analysisNewsMenu = document.getElementById('analysis-news-menu');
+    const analysisNewsContent = document.getElementById('analysis-news-content');
+    const lottoDisplay = document.getElementById('lotto-display');
     let currentLotto = '';
 
     function switchLotto(key) {
+        lottoDisplay.style.display = 'block';
+        lottoInfoEl.style.display = 'block';
+        analysisNewsContent.style.display = 'none';
         if (currentLotto === key) return;
         currentLotto = key;
 
@@ -275,6 +281,7 @@ document.addEventListener('DOMContentLoaded', () => {
         document.querySelectorAll('.lottery-list-item').forEach(item => {
             item.classList.toggle('active', item.dataset.lotto === key);
         });
+        analysisNewsMenu.classList.remove('active');
     }
 
     Object.keys(lotteries).forEach(key => {
@@ -284,6 +291,17 @@ document.addEventListener('DOMContentLoaded', () => {
         li.textContent = lotteries[key].name;
         li.addEventListener('click', () => switchLotto(key));
         lotteryList.appendChild(li);
+    });
+
+    analysisNewsMenu.addEventListener('click', () => {
+        lottoDisplay.style.display = 'none';
+        lottoInfoEl.style.display = 'none';
+        analysisNewsContent.style.display = 'block';
+        currentLotto = '';
+        document.querySelectorAll('.lottery-list-item').forEach(item => {
+            item.classList.remove('active');
+        });
+        analysisNewsMenu.classList.add('active');
     });
 
     // Theme toggle functionality
