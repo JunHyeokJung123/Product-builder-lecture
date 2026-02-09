@@ -24,6 +24,30 @@ const lotteries = {
       <p>To play, you pick five different numbers from 1 to 70 and one Mega Ball number from 1 to 25. The odds of hitting the jackpot are about 1 in 302.5 million.</p>
     `
   },
+  euromillions: {
+    name: "EuroMillions",
+    tagline: "Europe's biggest lottery! Drawings are held every Tuesday and Friday.",
+    whiteBalls: { count: 5, max: 50 },
+    specialBall: { name: "Lucky Star", max: 12 },
+    info: `
+      <h3>About EuroMillions</h3>
+      <p>EuroMillions is a transnational lottery, launched on 7th February 2004. It's known for its large jackpots and is playable in several European countries.</p>
+      <h3>How to Play</h3>
+      <p>Players select five main numbers from 1 to 50 and two "Lucky Stars" from a pool of 12 numbers. The odds of winning the jackpot are approximately 1 in 139.8 million.</p>
+    `
+  },
+  eurojackpot: {
+    name: "EuroJackpot",
+    tagline: "Win big with Europe's other major lottery! Drawings on Tuesdays and Fridays.",
+    whiteBalls: { count: 5, max: 50 },
+    specialBall: { name: "EuroNumber", max: 12 },
+    info: `
+      <h3>About EuroJackpot</h3>
+      <p>EuroJackpot was created in 2012 to compete with EuroMillions. It is offered in many European countries and has a jackpot that can roll over up to €120 million.</p>
+      <h3>How to Play</h3>
+      <p>Players choose five numbers from 1 to 50 and two supplementary "EuroNumbers" from 1 to 12. The odds of winning the jackpot are roughly 1 in 139.8 million.</p>
+    `
+  },
   luckyforlife: {
     name: "Lucky for Life",
     tagline: "Win $1,000 a day, for life! Drawings are held every single day.",
@@ -58,6 +82,18 @@ const lotteries = {
       <p>This game is a revival of the original multi-state lottery from the late 80s. It offers a smaller, but still significant, jackpot compared to Powerball or Mega Millions.</p>
       <h3>How to Play</h3>
       <p>Players pick five numbers from 1 to 52 and one Star Ball from 1 to 10. The odds of winning the main jackpot are about 1 in 25.9 million.</p>
+    `
+  },
+  keno: {
+    name: "Keno",
+    tagline: "Fast-paced action with drawings every few minutes!",
+    whiteBalls: { count: 10, max: 80 },
+    specialBall: null,
+    info: `
+      <h3>About Keno</h3>
+      <p>Keno is a rapid-fire lottery-style game where players choose 'spots' (numbers) and hope they match the numbers drawn. Drawings happen as frequently as every few minutes in some venues.</p>
+      <h3>How to Play</h3>
+      <p>Gameplay varies, but a common version involves picking 10 numbers from a pool of 80. The more numbers you match, the more you win. Payouts and odds depend on how many spots are chosen and matched.</p>
     `
   }
 };
@@ -179,11 +215,15 @@ class LottoMachine extends HTMLElement {
           if (!whiteBalls.includes(num)) whiteBalls.push(num);
         }
         whiteBalls.sort((a, b) => a - b);
-        const specialBall = Math.floor(Math.random() * specialConfig.max) + 1;
-        const currentSet = [...whiteBalls, specialBall];
+        
+        const currentSet = [...whiteBalls];
+        if (specialConfig) {
+            const specialBall = Math.floor(Math.random() * specialConfig.max) + 1;
+            currentSet.push(specialBall);
+        }
         
         currentSet.forEach((number, index) => {
-            const isSpecial = index === whiteConfig.count;
+            const isSpecial = specialConfig && index === whiteConfig.count;
             const ball = this.createResultBall(number, isSpecial, number);
             ball.style.animationDelay = `${i * 0.1 + index * 0.05}s`;
             resultSetDiv.appendChild(ball);
@@ -221,7 +261,7 @@ class LottoMachine extends HTMLElement {
           ballContainer.classList.add('history-ball-container');
 
           numbers.forEach((number, i) => {
-              const isSpecial = i === this.config.whiteBalls.count;
+              const isSpecial = this.config.specialBall && i === this.config.whiteBalls.count;
               const ball = this.createBall(number, isSpecial, number);
               ball.classList.add('history-ball');
               ballContainer.appendChild(ball);
@@ -302,16 +342,21 @@ document.addEventListener('DOMContentLoaded', () => {
         }
         const { hotWhite, coldWhite, hotSpecial, coldSpecial } = analysisCache[lottoKey];
 
-        const analysisHTML = `
+        let analysisHTML = `
             <p>This analysis identifies numbers that have been drawn frequently (hot) and infrequently (cold) in the last 200 simulated drawings for ${config.name}. This is for entertainment purposes and does not guarantee future results.</p>
             <br>
             <h3>Hot Numbers</h3>
-            <p><strong>White Balls:</strong> ${hotWhite.join(', ' )}</p>
-            <p><strong>${config.specialBall.name}:</strong> ${hotSpecial.join(', ' )}</p>
+            <p><strong>White Balls:</strong> ${hotWhite.join(', ')}</p>`;
+        if (config.specialBall) {
+            analysisHTML += `<p><strong>${config.specialBall.name}:</strong> ${hotSpecial.join(', ')}</p>`;
+        }
+        analysisHTML += `
             <br>
             <h3>Cold Numbers</h3>
-            <p><strong>White Balls:</strong> ${coldWhite.join(', ' )}</p>
-            <p><strong>${config.specialBall.name}:</strong> ${coldSpecial.join(', ' )}</p>`;
+            <p><strong>White Balls:</strong> ${coldWhite.join(', ')}</p>`;
+        if (config.specialBall) {
+            analysisHTML += `<p><strong>${config.specialBall.name}:</strong> ${coldSpecial.join(', ')}</p>`;
+        }
         analysisContentEl.innerHTML = analysisHTML;
     }
 
@@ -362,8 +407,10 @@ document.addEventListener('DOMContentLoaded', () => {
             });
 
             // Generate special ball
-            const specialBall = Math.floor(Math.random() * config.specialBall.max) + 1;
-            specialBallFreq[specialBall] = (specialBallFreq[specialBall] || 0) + 1;
+            if (config.specialBall) {
+                const specialBall = Math.floor(Math.random() * config.specialBall.max) + 1;
+                specialBallFreq[specialBall] = (specialBallFreq[specialBall] || 0) + 1;
+            }
         }
 
         const sortAndPick = (freqMap, count, ascending = true) => {
@@ -372,13 +419,18 @@ document.addEventListener('DOMContentLoaded', () => {
                 .slice(0, count)
                 .map(([num]) => parseInt(num));
         };
-
-        return {
+        
+        const analysis = {
             hotWhite: sortAndPick(whiteBallFreq, 5, false),
             coldWhite: sortAndPick(whiteBallFreq, 5, true),
-            hotSpecial: sortAndPick(specialBallFreq, 1, false),
-            coldSpecial: sortAndPick(specialBallFreq, 1, true)
         };
+
+        if (config.specialBall) {
+            analysis.hotSpecial = sortAndPick(specialBallFreq, 1, false);
+            analysis.coldSpecial = sortAndPick(specialBallFreq, 1, true);
+        }
+
+        return analysis;
     }
 
     Object.keys(lotteries).forEach(key => {
