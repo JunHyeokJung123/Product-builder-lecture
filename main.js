@@ -407,13 +407,20 @@ document.addEventListener('DOMContentLoaded', () => {
         const specialBallFreq = {};
 
         drawData.forEach(draw => {
-            const numbers = draw[8].split(' ').map(Number);
-            const specialBall = parseInt(draw[9], 10);
+            if (typeof draw[9] !== 'string' || (config.specialBall && typeof draw[10] !== 'string')) {
+                return; 
+            }
 
-            numbers.forEach(num => {
-                whiteBallFreq[num] = (whiteBallFreq[num] || 0) + 1;
-            });
-            if (config.specialBall) {
+            const numbers = draw[9].trim().split(/\s+/).map(numStr => parseInt(numStr, 10)).filter(num => !isNaN(num));
+            const specialBall = config.specialBall ? parseInt(draw[10], 10) : null;
+
+            if (numbers.length > 0) {
+                numbers.forEach(num => {
+                    whiteBallFreq[num] = (whiteBallFreq[num] || 0) + 1;
+                });
+            }
+            
+            if (config.specialBall && !isNaN(specialBall)) {
                 specialBallFreq[specialBall] = (specialBallFreq[specialBall] || 0) + 1;
             }
         });
@@ -462,9 +469,12 @@ document.addEventListener('DOMContentLoaded', () => {
             coldWhite: sortAndPick(whiteBallFreq, 5, true),
         };
 
-        if (config.specialBall) {
+        if (config.specialBall && Object.keys(specialBallFreq).length > 0) {
             analysis.hotSpecial = sortAndPick(specialBallFreq, 1, false);
             analysis.coldSpecial = sortAndPick(specialBallFreq, 1, true);
+        } else if (config.specialBall) {
+            analysis.hotSpecial = [];
+            analysis.coldSpecial = [];
         }
         return analysis;
     }
